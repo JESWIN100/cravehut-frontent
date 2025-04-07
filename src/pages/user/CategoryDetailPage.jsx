@@ -1,59 +1,72 @@
 import { CirclePlus, Star } from 'lucide-react';
-import React from 'react';
-import { useParams } from 'react-router-dom';
-
+import React, { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import { axiosInstance } from '../../config/axisoInstance'
 export default function CategoryDetailPage() {
-  const items = [
-    {
-      image: 'https://media.istockphoto.com/id/168855393/photo/gourmet-salad.jpg?s=612x612&w=0&k=20&c=bnDzlcKlZYR8NZQXOXb1fbF6x3sV8LnE5pu6rQA2LpI=',
-      title: 'Chicken Kebab',
-      price: 350,
-      restaurant: 'Malabar Hut',
-      rating: 4.4,
-    },
-    {
-      image: 'https://media.istockphoto.com/id/168855393/photo/gourmet-salad.jpg?s=612x612&w=0&k=20&c=bnDzlcKlZYR8NZQXOXb1fbF6x3sV8LnE5pu6rQA2LpI=',
-      title: 'Chicken Fry',
-      price: 220,
-      restaurant: 'Spice Junction',
-      rating: 4.2,
-    },
-    {
-      image: 'https://media.istockphoto.com/id/168855393/photo/gourmet-salad.jpg?s=612x612&w=0&k=20&c=bnDzlcKlZYR8NZQXOXb1fbF6x3sV8LnE5pu6rQA2LpI=',
-      title: 'Chicken Curry',
-      price: 150,
-      restaurant: 'Spice Junction',
-      rating: 4.3,
-    },
-  ];
+  const [resturentee,setRestaurants]=useState([])
+ 
+  const {name}=useParams()
+const navigate=useNavigate()
 
-  const {id}=useParams()
-  console.log(id);
+  useEffect(() => {
+    const fetchRestaurants = async () => {
+      try {
+        const response = await axiosInstance.get(`food/restaurants/food/${name}`);
+        console.log("API Response:", response.data.data);
   
+        // Ensure restaurants is always an array
+        setRestaurants(response.data.data );
+      } catch (error) {
+        console.error("Error fetching restaurants:", error);
+      }
+    };
+  
+    fetchRestaurants();
+  }, [name]);
+  
+  const onclick=async(id)=>{
+navigate(`/resturant/${id}`)
+  }
 
   return (
-    <div className="min-h-screen bg-gray-100 p-6">
-      <h1 className="text-3xl font-bold text-center mb-6">Popular Dishes</h1>
-      <div className="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto">
-        {items.map((item, index) => (
-          <div key={index} className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition">
-            <img className="w-full h-48 object-cover" src={item.image} alt={item.title} />
-            <div className="p-4">
-              <h2 className="text-xl font-semibold">{item.title}</h2>
-              <p className="text-gray-600">{item.restaurant}</p>
-              <div className="flex justify-between items-center mt-2">
-                <div className="flex items-center gap-1 text-yellow-500 font-bold">
-                <Star /> {item.rating}
-                </div>
-                <span className="text-lg font-bold text-green-600">₹{item.price}</span>
-              </div>
-              <button className="mt-4  text-blackfont-semibold py-2 rounded-lg transition">
-              <CirclePlus />
-              </button>
+    <div className='px-6 py-6 max-w-6xl mx-auto '>
+
+    <div className="p-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl">
+    {resturentee.map((dish) => (
+      <div
+        key={dish.id}
+        className="bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300"
+        onClick={() => onclick(dish._id)}
+
+      >
+        
+        <img
+          src={dish.image}
+          alt={dish.name}
+          className="h-48 w-full object-cover rounded-t-xl cursor-pointer"
+        />
+        <div className="p-4">
+          <div className="flex items-center justify-between">
+            <h2 className="text-lg font-semibold">{dish.name}</h2>
+            <div className="flex items-center space-x-2">
+              {/* <span className="text-gray-800 font-medium">₹{dish.price}</span> */}
+              {/* <button className="w-8 h-8 bg-yellow-400 text-white rounded-full text-lg leading-none hover:bg-yellow-500">
+                +
+              </button> */}
             </div>
           </div>
-        ))}
+          <div className='flex justify-between'>
+          <p className="text-sm text-gray-600 mt-1">{dish.address}</p>
+
+          <p className="text-yellow-600 font-semibold mt-1">{dish.ratings}</p>
+          </div>
+          <p className="text-sm text-gray-600 mt-1">{dish.category}</p>
+
+        </div>
       </div>
-    </div>
+    ))}
+  </div>
+  </div>
+
   );
 }

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { axiosInstance } from '../../config/axisoInstance'
+import axios from 'axios'
 
 export default function ResturentDetailPage() {
   const [resturant,setResturant]=useState([])
@@ -26,6 +27,23 @@ export default function ResturentDetailPage() {
     }
     fetchResturentFoods()
   },[])
+
+
+  const addToCart=async(foodItem)=>{
+      try {
+        const payload={
+          productId:foodItem._id,
+          quantity:1
+        }
+        const response=await axiosInstance.post("/cart/add",payload,{
+          withCredentials:true
+        })
+        console.log(response.data)
+      } catch (error) {
+        console.log(error);
+        alert('Failed to add item to cart.')
+      }
+  }
   return (
     <div>
         <div className="flex flex-col items-center bg-gray-100 w- p-6 min-h-screen">
@@ -68,7 +86,7 @@ export default function ResturentDetailPage() {
         <div className="text-right">
           <p className="text-gray-700">Rating: {food.ratings}</p>
           <p className="text-gray-700">Price: ₹{food.price}</p>
-          <button className="mt-2 bg-yellow-500 text-white px-3 py-1 rounded-lg">Add</button>
+          <button className="mt-2 bg-yellow-500 text-white px-3 py-1 rounded-lg"onClick={() => addToCart(food)}>Add</button>
         </div>
       </div>
       ))}

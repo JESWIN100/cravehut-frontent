@@ -17,7 +17,7 @@ export default function Footer() {
           <Grid item xs={12} md={4}>
             <Typography variant="h6">Quick Links</Typography>
             <Box>
-              <Typography variant="body2" component="a" href="/menu" sx={{ color: "#141111", textDecoration: "none", display: "block" }}>Menu</Typography>
+              <Typography variant="body2" component="a" href="#category" sx={{ color: "#141111", textDecoration: "none", display: "block" }}>Menu</Typography>
               <Typography variant="body2" component="a" href="/about" sx={{ color: "#0b0909", textDecoration: "none", display: "block" }}>About Us</Typography>
               <Typography variant="body2" component="a" href="/contact" sx={{ color: "#100e0e", textDecoration: "none", display: "block" }}>Contact</Typography>
               <Typography variant="body2" component="a" href="/faq" sx={{ color: "#0d0b0b", textDecoration: "none", display: "block" }}>FAQ</Typography>

@@ -1,110 +1,153 @@
-import React, { useState } from 'react';
-import Lottie from 'lottie-react';
-import data from '../../assets/Animation - 1743700155868.json';
-
-export default function CartPage() {
+import { useEffect, useState } from 'react';
+import { axiosInstance } from '../../config/axisoInstance';
+const CartPage = () => {
+  const [address, setAddress] = useState('');
+  const [name, setName] = useState('');
   const [coupon, setCoupon] = useState('');
-  const [discount, setDiscount] = useState(0);
-  const itemTotal = 224;
-  const deliveryFee = 20;
-  const platformFee = 10;
-  const gstCharges = 12.28;
+  const [cart, setCarts] = useState([]);
   
-  const applyCoupon = () => {
-    if (coupon.toLowerCase() === 'save10') {
-      setDiscount(10);
-    } else {
-      setDiscount(0);
-      alert('Invalid coupon code');
+  const updateQuantity = async (index, delta) => {
+    const updatedItem = { ...cart[index] };
+    const newQty = updatedItem.quantity + delta;
+  
+    if (newQty < 1) return; // avoid quantity < 1
+  console.log(updatedItem);
+  
+    try {
+      const response = await axiosInstance.put(
+        "/cart/update",
+        {
+          productId: updatedItem.foodId,
+          quantity: newQty,
+        },
+        { withCredentials: true }
+      );
+
+  
+      // If backend update succeeds, update state
+      setCarts(prevCart => {
+        const updatedCart = [...prevCart];
+        updatedCart[index].quantity = newQty;
+        return updatedCart;
+      });
+    } catch (err) {
+      console.error("Failed to update quantity:", err);
     }
   };
+  
 
-  const totalAmount = itemTotal + deliveryFee + platformFee + gstCharges - discount;
+  useEffect(()=>{
+    const fetchCart=async()=>{
+      const response=await axiosInstance.get("/cart",{withCredentials:true})
+      console.log(response.data.items)
+      setCarts(response.data.items)
+    }
+    fetchCart()
+  },[])
+  
+
+
+  
+
+  // Calculate total price
+  const totalPrice = cart.reduce(
+    (acc, item) => acc + item.price * item.quantity,
+    0
+  );
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-100 p-4">
-      <div className="bg-white shadow-lg rounded-lg p-6 max-w-3xl w-full flex flex-col md:flex-row">
-        {/* Left Section: Address & Animation */}
-        <div className="md:w-1/2 p-4 flex flex-col items-center">
-          <Lottie animationData={data} loop={true} className="w-48" />
-          <h1 className="text-xl font-semibold mt-4">Delivery Address</h1>
-          <input 
-            type="text" 
-            placeholder="Enter your name & address" 
-            className="border rounded p-2 w-full mt-2 focus:outline-none focus:ring-2 focus:ring-yellow-400" 
+    <div className="min-h-screen mt-6 bg-gray-50 p-4 max-w-5xl mx-auto">
+      <h1 className="text-2xl font-bold mb-6">Cart Summary</h1>
+
+      <div className="flex flex-col md:flex-row gap-4">
+        <div className="bg-white rounded-lg shadow p-4 w-full md:w-1/2">
+          <h2 className="font-semibold text-lg mb-2">Name & Address</h2>
+          <input
+            type="text"
+            placeholder="Your Name"
+            className="w-full p-2 border border-gray-300 rounded mb-2"
+            value={name}
+            onChange={e => setName(e.target.value)}
           />
-          <button className="bg-yellow-500 hover:bg-yellow-600 text-white font-bold rounded px-4 py-2 w-full mt-4">
-            Save Address & Proceed
+          <input
+            type="text"
+            placeholder="Delivery Address"
+            className="w-full p-2 border border-gray-300 rounded mb-4"
+            value={address}
+            onChange={e => setAddress(e.target.value)}
+          />
+          <button className="w-full bg-green-500 text-white py-2 rounded font-medium hover:bg-green-600 transition">
+            SAVE ADDRESS & PROCEED
           </button>
         </div>
-        
-        {/* Right Section: Cart Items & Summary */}
-        <div className="md:w-1/2 ">
-          <h2 className="text-lg font-semibold">Your Cart</h2>
-          <div className="bg-white shadow-lg p-5 rounded-lg">
-            <img src="https://plus.unsplash.com/premium_photo-1670984939096-f3cfd48c7408?fm=jpg&q=60&w=3000" alt="Food" className="rounded-lg w-full h-48 object-cover mb-4"/>
-            <h1 className="text-xl font-bold">Jubilee Restaurant</h1>
-            <h2 className="text-gray-600">Sultan Bathery</h2>
-            
-            <div className="mt-4">
-              <div className="flex justify-between items-center">
-                <span>Chicken Biryani</span>
-                <span>₹{itemTotal}</span>
-              </div>
-              <div className="flex items-center mt-2">
-                <button className="bg-gray-300 rounded-l px-3">-</button>
-                <span className="px-4">1</span>
-                <button className="bg-gray-300 rounded-r px-3">+</button>
-              </div>
-              <a href="#" className="text-blue-500 mt-2 block">Customize</a>
-            </div>
 
-            {/* Coupon Code Section */}
-            <div className="border border-gray-300 mt-4 p-3 rounded">
-              <input 
-                type="text" 
-                placeholder="Enter Coupon Code" 
-                className="border p-2 rounded w-2/3 focus:outline-none" 
-                value={coupon}
-                onChange={(e) => setCoupon(e.target.value)}
-              />
-              <button onClick={applyCoupon} className="ml-2 bg-green-500 text-white px-3 py-2 rounded hover:bg-green-600">
-                Apply
+        <div className="bg-white rounded-lg shadow p-4 w-full md:w-1/2">
+          {cart.map((item, index) => (
+            <div
+              key={index}
+              className="flex justify-between items-center mb-4 pb-4 border-b border-gray-200"
+            >
+              <div className="flex gap-4 items-center">
+                <img
+                  src={item.image}
+                  alt={item.name}
+                  className="w-16 h-16 object-cover rounded"
+                />
+                <div>
+                  <div className="font-medium">{item.name}</div>
+                  <div className="text-gray-600">
+                  
+                    {item.price * item.quantity}
+                  </div>
+                  {/* Quantity controls */}
+                  <div className="flex gap-2 mt-2">
+                    <button
+                      onClick={() => updateQuantity(index, -1)}
+                      className="bg-gray-200 px-2 py-1 rounded hover:bg-gray-300"
+                    >
+                      −
+                    </button>
+                    <span>{item.quantity}</span>
+                    <button
+                      onClick={() => updateQuantity(index, 1)}
+                      className="bg-gray-200 px-2 py-1 rounded hover:bg-gray-300"
+                    >
+                      +
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <button
+                onClick={() => removeItem(index)}
+                className="text-red-500 text-sm font-medium hover:underline"
+              >
+                Remove
               </button>
             </div>
+          ))}
 
-            {/* Bill Details */}
-            <h3 className="mt-5 font-semibold">Bill Details</h3>
-            <div className="flex justify-between mt-2">
-              <span>Item Total</span>
-              <span>₹{itemTotal}</span>
-            </div>
-            <div className="flex justify-between mt-2">
-              <span>Delivery Fee</span>
-              <span>₹{deliveryFee}</span>
-            </div>
-            <div className="flex justify-between mt-2">
-              <span>Platform Fee</span>
-              <span>₹{platformFee}</span>
-            </div>
-            <div className="flex justify-between mt-2">
-              <span>GST and Restaurant Charges</span>
-              <span>₹{gstCharges}</span>
-            </div>
-            {discount > 0 && (
-              <div className="flex justify-between mt-2 text-green-600">
-                <span>Discount Applied</span>
-                <span>-₹{discount}</span>
-              </div>
-            )}
-
-            <div className="border-t border-gray-300 mt-4 pt-3">
-              <h2 className="text-xl font-bold">TO PAY</h2>
-              <span className="text-xl">₹{totalAmount}</span>
-            </div>
+          <div className="flex gap-1 font-bold text-lg mb-4">
+            <span>Total Price</span>
+            <span>₹{totalPrice}</span>
           </div>
+
+          <input
+            type="text"
+            placeholder="Apply Coupon"
+            className="w-full p-2 border border-gray-300 rounded mb-2"
+            value={coupon}
+            onChange={e => setCoupon(e.target.value)}
+          />
         </div>
+      </div>
+
+      <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 mt-6 text-sm text-gray-700 rounded">
+        <p className="mb-2">✅ Review your order and address details before proceeding.</p>
+        <p className="mb-2">⏱️ Cancel within 60 seconds for a full refund. No refund after that.</p>
+        <p>🍲 Avoid cancellations to help reduce food waste.</p>
       </div>
     </div>
   );
-}
+};
+
+export default CartPage;
