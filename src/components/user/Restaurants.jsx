@@ -12,7 +12,7 @@ const Restaurants = () => {
     const fetchData = async () => {
       try {
         const response = await axiosInstance.get("/resturent/getall");
-        console.log(response.data.data);
+
         setRestaurants(response.data.data);
       } catch (error) {
         console.error("Error fetching data:", error);

@@ -12,7 +12,7 @@ const navigate=useNavigate()
     const fetchRestaurants = async () => {
       try {
         const response = await axiosInstance.get(`food/restaurants/food/${name}`);
-        console.log("API Response:", response.data.data);
+      
   
         // Ensure restaurants is always an array
         setRestaurants(response.data.data );

@@ -11,7 +11,7 @@ const CartPage = () => {
     const newQty = updatedItem.quantity + delta;
   
     if (newQty < 1) return; // avoid quantity < 1
-  console.log(updatedItem);
+
   
     try {
       const response = await axiosInstance.put(
@@ -35,16 +35,33 @@ const CartPage = () => {
     }
   };
   
+  const removeItem = async (index) => {
+    const itemToRemove = cart[index];
+    try {
+    
+      const response = await axiosInstance.delete(`/cart/remove`, {
+        params: { productId: itemToRemove.foodId },
+        withCredentials: true
+      });
+
+  
+      setCarts(prevCart => prevCart.filter((_, i) => i !== index));
+    } catch (err) {
+      console.error("Failed to remove item:", err);
+    }
+  };
+  
 
   useEffect(()=>{
     const fetchCart=async()=>{
       const response=await axiosInstance.get("/cart",{withCredentials:true})
-      console.log(response.data.items)
+   
       setCarts(response.data.items)
     }
     fetchCart()
   },[])
   
+
 
 
   

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { axiosInstance } from '../../config/axisoInstance'
 import axios from 'axios'
 
@@ -7,11 +7,13 @@ export default function ResturentDetailPage() {
   const [resturant,setResturant]=useState([])
   const [foods,setFoods]=useState([])
   const {id}=useParams()
+console.log(id);
 
-
+const navigate=useNavigate()
   useEffect(()=>{
     const fetchResturent=async()=>{
-      const response=await axiosInstance.get(`resturent/getallbyid/${id}`)
+      const response=await axiosInstance.get(`resturent/getid/${id}`)
+      console.log(response);
       setResturant(response.data.data);
       
     }
@@ -21,7 +23,7 @@ export default function ResturentDetailPage() {
     useEffect(()=>{
     const fetchResturentFoods=async()=>{
       const response=await axiosInstance.get(`resturent/getresturantfood/${id}`)
-      console.log(response.data.foods);
+    
       setFoods(response.data.foods);
       
     }
@@ -29,21 +31,29 @@ export default function ResturentDetailPage() {
   },[])
 
 
-  const addToCart=async(foodItem)=>{
-      try {
-        const payload={
-          productId:foodItem._id,
-          quantity:1
-        }
-        const response=await axiosInstance.post("/cart/add",payload,{
-          withCredentials:true
-        })
-        console.log(response.data)
-      } catch (error) {
-        console.log(error);
-        alert('Failed to add item to cart.')
+  const addToCart = async (foodItem) => {
+    try {
+      const payload = {
+        productId: foodItem._id,
+        quantity: 1
+      };
+      const response = await axiosInstance.post("/cart/add", payload, {
+        withCredentials: true
+      });
+  
+      alert(response.data.message);
+    } catch (error) {
+      console.log(error.response);
+  
+      // Check if token is false and navigate to login
+      if (error.response?.data?.token === false) {
+        navigate("/login");
       }
-  }
+  
+      alert('Failed to add item to cart.');
+    }
+  };
+  
   return (
     <div>
         <div className="flex flex-col items-center bg-gray-100 w- p-6 min-h-screen">

@@ -13,6 +13,12 @@ import CreateRestaurant from "../pages/resturent/CreateRestaurant";
 import { ResturantAuth } from "./protectedRoutes/ResturantAuth";
 import AdminLayout from "../layout/AdminLayout";
 import DashboardPage from "../pages/admin/DashboardPage";
+import Restaurants from "../pages/admin/Restaurants";
+import Foods from "../pages/admin/Foods";
+import Orders from "../pages/admin/Orders";
+import Reviews from "../pages/admin/Reviews";
+import AdminLogin from "../components/admin/AdminLogin";
+import { AdminAuth } from "./protectedRoutes/AdminAuth";
 
 
 export const router=createBrowserRouter([
@@ -26,7 +32,10 @@ export const router=createBrowserRouter([
                 element: <HomePage />
                 },
                 
-                      
+                {
+                  path: "login",
+                  element: <LoginPage/>
+                  },
                   
                
             ],
@@ -50,10 +59,7 @@ export const router=createBrowserRouter([
                         path: "cart",
                         element: <Cartpage/>
                         },
-                        {
-                            path: "login",
-                            element: <LoginPage/>
-                            },
+                       
                   
               
            
@@ -98,17 +104,42 @@ export const router=createBrowserRouter([
 },
 {
     path: "/admin",
-    element: <AdminLayout />,
-    // errorElement:<UserErrorPage/>,
+    element:<AdminAuth><AdminLayout /></AdminAuth> ,
+    // errorElement: <UserErrorPage />,
     children: [
-        
-            {
-                path: "dashboard",
-                element: <DashboardPage/>
-                }
-                
-              
-           
-        ],
-},
+      {
+        path: "dashboard",
+        element: <DashboardPage />
+      },
+      {
+        path: "restaurants",
+        element: <Restaurants />
+      },
+      {
+        path: "foods",
+        element: <Foods />
+      },
+      {
+        path: "orders",
+        element: <Orders />
+      },
+      {
+        path: "reviews",
+        element: <Reviews />
+      }
+    ]
+  },
+  {
+    path: "/admin",
+    // element: <AdminLayout />,
+    // errorElement: <UserErrorPage />,
+    children: [
+      {
+        path: "login",
+        element: <AdminLogin />
+      }
+      
+    ]
+  }
+  
 ])

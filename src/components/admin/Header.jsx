@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import {
   Menu,
   X,
@@ -12,17 +12,38 @@ import {
   Pizza,
   ClipboardList
 } from 'lucide-react';
-
+import { axiosInstance } from '../../config/axisoInstance';
 export default function AdminHeader() {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
+  const navigate=useNavigate()
   const toggleSidebar = () => setIsOpen(!isOpen);
+
+
+
+  const logout = async () => {
+    try {
+      const response = await axiosInstance.post("/admin/logout", {}, { withCredentials: true });
+      console.log(response.data); 
+      if(response.data.success=true){
+        navigate("/admin/login")
+      }
+    } catch (error) {
+      console.error("Logout failed:", error.response?.data || error.message);
+    }
+  };
+
+
 
   // Close sidebar when clicking outside (for mobile)
   const closeSidebar = () => {
     if (window.innerWidth < 1024) {
       setIsOpen(false);
     }
+
+
+
+    
   };
 
   return (
@@ -52,16 +73,16 @@ export default function AdminHeader() {
         <div className="p-4 flex flex-col h-full">
           <div className="mb-8 mt-4 flex items-center justify-center">
             <Utensils size={28} className="text-amber-600 mr-2" />
-            <h1 className="text-2xl font-bold text-gray-800">Restaurant Panel</h1>
+            <h1 className="text-2xl font-bold text-gray-800">Admin Panel</h1>
           </div>
           
           <nav className="flex-1">
             <ul className="space-y-1">
               <NavItem 
-                to="/admin" 
+                to="/admin/dashboard" 
                 icon={<LayoutDashboard size={20} />} 
                 label="Dashboard" 
-                isActive={location.pathname === '/admin'}
+                isActive={location.pathname === '/admin/dashboard'}
               />
               <NavItem 
                 to="/admin/restaurants" 
@@ -96,13 +117,16 @@ export default function AdminHeader() {
             </ul>
           </nav>
           
-          <div className="mt-auto mb-4">
-            <NavItem 
-              to="/logout" 
-              icon={<LogOut size={20} />} 
-              label="Logout" 
-              isActive={false}
-            />
+          <div className="mt-auto mb-4" >
+          <button 
+  onClick={logout}
+  className="flex items-center w-full p-3 rounded text-red-600 hover:bg-red-50 transition duration-200"
+>
+  <LogOut size={20} className="text-red-500" />
+  <span className="ml-3">Logout</span>
+</button>
+
+
           </div>
         </div>
       </div>
