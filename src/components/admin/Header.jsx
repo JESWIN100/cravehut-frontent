@@ -10,7 +10,8 @@ import {
   LogOut,
   Users,
   Pizza,
-  ClipboardList
+  ClipboardList,
+  Folder
 } from 'lucide-react';
 import { axiosInstance } from '../../config/axisoInstance';
 export default function AdminHeader() {
@@ -96,6 +97,12 @@ export default function AdminHeader() {
                 label="Food Menu" 
                 isActive={location.pathname.includes('/admin/foods')}
               />
+                 <NavItem 
+      to="/admin/categories" 
+      icon={<Folder size={20} />} // Example icon from Lucide, you can change it
+      label="Categories" 
+      isActive={location.pathname.includes('/admin/categories')}
+    />
               <NavItem 
                 to="/admin/orders" 
                 icon={<ClipboardList size={20} />} 

@@ -10,9 +10,10 @@ const navigate=useNavigate()
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axiosInstance.get("/food/unique");
+        const response = await axiosInstance.get("/user/getallcategory");
+     console.log(response);
      
-        setFoodItems(response.data.foods)
+        setFoodItems(response.data.categories)
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -33,11 +34,11 @@ const navigate=useNavigate()
   {/* Make sure this div allows horizontal scroll */}
   <div className="">
     {/* This is the scrollable row */}
-    <div className=" grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-7 gap-6">
+    <div className=" grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-7 gap-6">
       {foodItems.map((item, index) => (
         <div 
           key={index} 
-          className="flex-none flex flex-col items-center w-48  transform transition-transform duration-300 hover:scale-105 hover:rounded-shadow-xl"  
+          className="flex-none flex flex-col items-center w-48  transform transition-transform duration-300 hover:scale-110 hover:rounded-shadow-xl"  
           onClick={() => nextPage(item.name)}
         >
           <img 

@@ -2,10 +2,21 @@ import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { axiosInstance } from '../../config/axisoInstance'
 import axios from 'axios'
-
+import { toast } from 'sonner'
+import {
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Button
+} from '@mui/material';
 export default function ResturentDetailPage() {
   const [resturant,setResturant]=useState([])
   const [foods,setFoods]=useState([])
+   const [showAuthModal, setShowAuthModal] = useState(false);
+   const [showConfirm, setShowConfirm] = useState(false);
+   const [pendingItem, setPendingItem] = useState(null);
   const {id}=useParams()
 console.log(id);
 
@@ -22,87 +33,176 @@ const navigate=useNavigate()
 
     useEffect(()=>{
     const fetchResturentFoods=async()=>{
-      const response=await axiosInstance.get(`resturent/getresturantfood/${id}`)
+   try {
+    const response=await axiosInstance.get(`resturent/getresturantfood/${id}`)
+   
     
-      setFoods(response.data.foods);
+    setFoods(response.data.foods);
+   } catch (error) {
+    console.log(error);
+    
+   }
       
     }
     fetchResturentFoods()
   },[])
 
+console.log(foods);
 
-  const addToCart = async (foodItem) => {
-    try {
-      const payload = {
-        productId: foodItem._id,
-        quantity: 1
-      };
-      const response = await axiosInstance.post("/cart/add", payload, {
-        withCredentials: true
-      });
-  
-      alert(response.data.message);
-    } catch (error) {
-      console.log(error.response);
-  
-      // Check if token is false and navigate to login
-      if (error.response?.data?.token === false) {
-        navigate("/login");
-      }
-  
-      alert('Failed to add item to cart.');
+const addToCart = (foodItem) => {
+  const newRestaurantId = foodItem.restaurant._id;
+  const existingRestaurantId = localStorage.getItem("cartResturentId");
+
+  if (existingRestaurantId && existingRestaurantId !== newRestaurantId) {
+    setPendingItem(foodItem);
+    setShowConfirm(true);
+    return;
+  }
+
+  handleAddToCart(foodItem);
+};
+
+const handleAddToCart = async (foodItem) => {
+  try {
+    const payload = {
+      productId: foodItem._id,
+      quantity: 1,
+      restaurant: foodItem.restaurant.name,
+      restaurantId: foodItem.restaurant._id,
+      restaurantImage: foodItem.restaurant.image,
+    };
+
+    const response = await axiosInstance.post("/cart/add", payload,{withCredentials:true});
+
+    localStorage.setItem("cartResturentId", foodItem.restaurant._id);
+
+    toast.success(
+      <div>
+        Added to Cart{' '}
+        <a href="/cart" target="_blank" rel="noopener noreferrer" className="underline">
+          View Cart
+        </a>
+      </div>
+    );
+  } catch (error) {
+    console.log(error.response);
+    if (error.response?.data?.token === false) {
+      toast.warning("Your session has expired. Please log in again.");
     }
+  }
+};
+
+  
+
+  const handleConfirmNo = () => {
+    setPendingItem(null);
+    setShowConfirm(false);
   };
+
+  const handleConfirmYes = () => {
+    if (pendingItem) {
+      handleAddToCart(pendingItem);
+      setPendingItem(null);
+    }
+    setShowConfirm(false);
+  };
+
+
+
   
   return (
-    <div>
-        <div className="flex flex-col items-center bg-gray-100 w- p-6 min-h-screen">
-      {/* Restaurant Info Card */}
-      <div className="bg-white shadow-lg rounded-2xl p-5 min-w-[300px] md:min-w-[400px] lg:min-w-[800px] flex justify-between items-center">
-        <div>
-          <h2 className="text-xl font-bold">{resturant.name}</h2>
-          <p className="text-gray-600">{resturant.address}</p>
-          <p className="text-gray-500">{resturant.category}</p>
-          <div className="flex items-center mt-2 text-yellow-500">
-            <span className="font-semibold">{resturant.ratings}</span>
-            <span className="ml-1">⭐</span>
-          </div>
-          <p className="text-gray-600 mt-2 flex items-center">
-            Order above 500 for free delivery
-            <span className="ml-2">🚚</span>
-          </p>
+    <div className="flex flex-col items-center bg-gray-100 w-full p-6 min-h-screen">
+  {/* Check if restaurant data is available */}
+  {resturant ? (
+    <div className="bg-white shadow-lg rounded-2xl p-5 min-w-[300px] md:min-w-[400px] lg:min-w-[800px] flex justify-between items-center">
+      <div>
+        <h2 className="text-xl font-bold">{resturant.name}</h2>
+        <p className="text-gray-600">{resturant.address}</p>
+        <p className="text-gray-500">{resturant.category}</p>
+        <div className="flex items-center mt-2 text-yellow-500">
+          <span className="font-semibold">{resturant.ratings}</span>
+          <span className="ml-1">⭐</span>
         </div>
-        <img
-          src={resturant.image}
-          alt="restaurant"
-          className="rounded-xl object-cover w-[100px] h-[80px]"
-        />
+        <p className="text-gray-600 mt-2 flex items-center">
+          Order above 500 for free delivery
+          <span className="ml-2">🚚</span>
+        </p>
       </div>
+      <img
+        src={resturant.image}
+        alt="restaurant"
+        className="rounded-xl object-cover w-[100px] h-[80px]"
+      />
+    </div>
+  ) : (
+    <div className="text-center mt-10">
+      <img
+        src="https://cdn-icons-png.flaticon.com/512/7486/7486790.png"
+        alt="No Restaurant Data"
+        className="w-32 h-32 mx-auto"
+      />
+      <p className="text-gray-500 mt-4">No restaurant data available</p>
+    </div>
+  )}
 
-      {/* Menu Item Card */}
-      {foods.map((food,index)=>(
-        <div className="bg-white shadow-lg rounded-2xl p-4 flex mt-4 min-w-[200px] md:min-w-[300px] lg:min-w-[990px]">
+  {/* Check if food data is available */}
+  {foods && foods.length > 0 ? (
+    foods.map((food, index) => (
+      <div
+        key={index}
+        className="bg-white shadow-lg rounded-2xl p-4 flex mt-4 min-w-[200px] md:min-w-[300px] lg:min-w-[1100px] lg:max-w-[1100px]"
+      >
         <img
           src={food.image}
-          alt="Chicken Kebab"
+          alt={food.name}
           className="rounded-xl object-cover w-[80px] h-[80px]"
         />
         <div className="ml-4 flex-1">
           <h3 className="font-bold">{food.name}</h3>
-          <p className="text-gray-600 text-sm">
-            {food.description}.
-          </p>
+          <p className="text-gray-600 text-sm">{food.description}</p>
         </div>
         <div className="text-right">
           <p className="text-gray-700">Rating: {food.ratings}</p>
           <p className="text-gray-700">Price: ₹{food.price}</p>
-          <button className="mt-2 bg-yellow-500 text-white px-3 py-1 rounded-lg"onClick={() => addToCart(food)}>Add</button>
+          <button
+            className="mt-2 bg-yellow-500 text-white px-3 py-1 rounded-lg"
+            onClick={() => addToCart(food)}
+          >
+            Add
+          </button>
         </div>
       </div>
-      ))}
-    
-   
+    ))
+  ) : (
+    <div className="text-center mt-10">
+      <img
+        src="https://img.freepik.com/free-vector/hand-drawn-no-data-concept_52683-127823.jpg?semt=ais_country_boost&w=740"
+        alt="No Food Data"
+        className="bg-transparent w-96  mx-auto"
+      />
+      <p className="text-gray-500 mt-4">No food items found</p>
     </div>
-    </div>
+  )}
+   <Dialog open={showConfirm} onClose={handleConfirmNo}>
+        <DialogTitle>Replace Cart?</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Your cart contains items from another restaurant. Do you want to clear it and add this item?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleConfirmNo} color="primary">
+            No
+          </Button>
+          <Button onClick={handleConfirmYes} color="error" variant="contained">
+            Yes, Replace
+          </Button>
+        </DialogActions>
+      </Dialog>
+</div>
+
+
+
+
   )
 }

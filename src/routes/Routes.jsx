@@ -19,6 +19,16 @@ import Orders from "../pages/admin/Orders";
 import Reviews from "../pages/admin/Reviews";
 import AdminLogin from "../components/admin/AdminLogin";
 import { AdminAuth } from "./protectedRoutes/AdminAuth";
+import TermsAndCondition from "../pages/user/TermsAndCondition";
+import AboutUs from "../pages/user/AboutPage";
+import MyMenuPage from "../pages/resturent/MyMenuPage";
+import AddDish from "../pages/resturent/AddDish";
+import CategoriesPage from "../pages/admin/CategoriesPage";
+import OrderTrackingPage from "../pages/user/OrderTrackingPage";
+import PaymentSuccessPage from "../pages/user/PaymentSuccessPage";
+import MyOrdersPage from "../pages/user/MyOdersPage";
+import ResturantOrders from "../pages/resturent/ResturentOrders";
+
 
 
 export const router=createBrowserRouter([
@@ -36,8 +46,15 @@ export const router=createBrowserRouter([
                   path: "login",
                   element: <LoginPage/>
                   },
-                  
-               
+                  {
+                    path: "track-order/:id",
+                    element: <OrderTrackingPage/>
+                    },
+                    {
+                      path: "success",
+                      element: <PaymentSuccessPage/>
+                      },
+                      
             ],
 },
 {
@@ -59,9 +76,18 @@ export const router=createBrowserRouter([
                         path: "cart",
                         element: <Cartpage/>
                         },
-                       
-                  
-              
+                        {
+                          path: "/terms",
+                          element: <TermsAndCondition/>
+                          },
+                          {
+                            path: "/about",
+                            element: <AboutUs/>
+                            },
+                            {
+                              path: "my-orders",
+                              element: < MyOrdersPage/>
+                              },
            
         ],
 },
@@ -70,21 +96,25 @@ export const router=createBrowserRouter([
     element: <ResturantAuth><RestutrantLayout /></ResturantAuth>,
     // errorElement:<UserErrorPage/>,
     children: [
-        {
-            path: "login",
-            element: <ResturantLogin />
-            },
+        
         {
             path: "dashboard",
             element: <ResturentHomePage />
             },
+            
             {
-                path:"create-restaurant",
-                element:<CreateRestaurant/>
-            }
-                  
-              
-           
+              path:"my-menu",
+              element:<MyMenuPage/>
+          },
+          {
+            path:"add-dish",
+            element:<AddDish/>
+        }     ,
+        {
+          path:"orders",
+          element:<ResturantOrders/>
+      },
+       
         ],
 },
 {
@@ -95,9 +125,13 @@ export const router=createBrowserRouter([
         {
             path: "login",
             element: <ResturantLogin />
-            }
+            },
+            {
+              path:"create-restaurant",
+              element:<CreateRestaurant/>
+          },
         
-                  
+          
               
            
         ],
@@ -126,7 +160,12 @@ export const router=createBrowserRouter([
       {
         path: "reviews",
         element: <Reviews />
-      }
+      },
+      {
+        path: "categories",
+        element: <CategoriesPage />
+      },
+   
     ]
   },
   {

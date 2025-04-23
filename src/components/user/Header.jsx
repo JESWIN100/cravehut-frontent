@@ -27,28 +27,30 @@ export default function Header() {
         CraveHut
       </Link>
       <div className="flex space-x-4">
-        <Link to="/" className="text-gray-700 hover:text-yellow-500">
+        {/* <Link to="/" className="text-gray-700 hover:text-yellow-500">
           Home
-        </Link>
-        <a
-          href="#restaurants"
+        </Link> */}
+        {/* <a
+          href="/#restaurants"
           className="text-gray-700 hover:text-yellow-500"
         >
           Restaurants
-        </a>
+        </a> */}
         <Link
-          to="/cart"
-          className="flex items-center gap-2 text-black hover:text-yellow-400 transition-colors duration-300"
-          aria-label="View Cart"
-        >
-          <ShoppingBag size={18} />
-          <span>Cart</span>
-          {cart.length > 0 && (
-            <span className="ml-1 inline-flex items-center justify-center px-2 py-0.5 text-xs font-semibold leading-none text-yellow-900 bg-yellow-300 rounded-full">
-              {cart.length}
-            </span>
-          )}
-        </Link>
+  to="/cart"
+  className="relative flex items-center text-black hover:text-yellow-400 transition-colors duration-300"
+  aria-label="View Cart"
+>
+  <div className="relative">
+    <ShoppingBag size={24} />
+    {cart.length > 0 && (
+      <span className="absolute -top-2 -right-2 bg-yellow-400 text-yellow-900 text-xs font-bold px-1.5 py-0.5 rounded-full shadow-md">
+        {cart.length}
+      </span>
+    )}
+  </div>
+</Link>
+
       </div>
     </nav>
   );

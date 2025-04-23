@@ -27,7 +27,7 @@ export default function UserErrorPage() {
               <h3 className="text-4xl font-bold">Look like you're lost</h3>
               <p className="text-lg mt-2">The page you are looking for is not available!</p>
               {/* <a href="/" className="link_404 mt-4">Go to Home</a> */}
-              <Link to={'/user/home'}>
+              <Link to={'/'}>
               <button className="btn btn-success p-5 pt-15">Go to Home</button> 
               </Link>
             </div>
