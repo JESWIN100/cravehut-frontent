@@ -28,117 +28,121 @@ import OrderTrackingPage from "../pages/user/OrderTrackingPage";
 import PaymentSuccessPage from "../pages/user/PaymentSuccessPage";
 import MyOrdersPage from "../pages/user/MyOdersPage";
 import ResturantOrders from "../pages/resturent/ResturentOrders";
+import EditMenuPage from "../pages/resturent/EditMenuPage";
 
 
 
-export const router=createBrowserRouter([
-    {
+export const router = createBrowserRouter([
+  {
+    path: "/",
+    // element: <RootLayout />,
+    errorElement: <UserErrorPage />,
+    children: [
+      {
         path: "/",
-        // element: <RootLayout />,
-        errorElement:<UserErrorPage/>,
-        children: [
-            {
-                path: "/",
-                element: <HomePage />
-                },
-                
-                {
-                  path: "login",
-                  element: <LoginPage/>
-                  },
-                  {
-                    path: "track-order/:id",
-                    element: <OrderTrackingPage/>
-                    },
-                    {
-                      path: "success",
-                      element: <PaymentSuccessPage/>
-                      },
-                      
-            ],
-},
-{
+        element: <HomePage />
+      },
+
+      {
+        path: "login",
+        element: <LoginPage />
+      },
+      {
+        path: "track-order/:id",
+        element: <OrderTrackingPage />
+      },
+      {
+        path: "success",
+        element: <PaymentSuccessPage />
+      },
+
+    ],
+  },
+  {
     path: "/",
     element: <RootLayout />,
-    errorElement:<UserErrorPage/>,
+    errorElement: <UserErrorPage />,
     children: [
-        
-            {
-                path: "resturant/:id",
-                element: <ResturentDetailPage/>
-                },
-                {
-                    path: "category/:name",
-                    element: <CategoryDetailPage/>
-                    },
-                    
-                    {
-                        path: "cart",
-                        element: <Cartpage/>
-                        },
-                        {
-                          path: "/terms",
-                          element: <TermsAndCondition/>
-                          },
-                          {
-                            path: "/about",
-                            element: <AboutUs/>
-                            },
-                            {
-                              path: "my-orders",
-                              element: < MyOrdersPage/>
-                              },
-           
-        ],
-},
-{
+
+      {
+        path: "resturant/:id",
+        element: <ResturentDetailPage />
+      },
+      {
+        path: "category/:name",
+        element: <CategoryDetailPage />
+      },
+
+      {
+        path: "cart",
+        element: <Cartpage />
+      },
+      {
+        path: "/terms",
+        element: <TermsAndCondition />
+      },
+      {
+        path: "/about",
+        element: <AboutUs />
+      },
+      {
+        path: "my-orders",
+        element: < MyOrdersPage />
+      },
+
+    ],
+  },
+  {
     path: "/restaurants",
     element: <ResturantAuth><RestutrantLayout /></ResturantAuth>,
     // errorElement:<UserErrorPage/>,
     children: [
-        
-        {
-            path: "dashboard",
-            element: <ResturentHomePage />
-            },
-            
-            {
-              path:"my-menu",
-              element:<MyMenuPage/>
-          },
-          {
-            path:"add-dish",
-            element:<AddDish/>
-        }     ,
-        {
-          path:"orders",
-          element:<ResturantOrders/>
+
+      {
+        path: "dashboard",
+        element: <ResturentHomePage />
       },
-       
-        ],
-},
-{
+
+      {
+        path: "my-menu",
+        element: <MyMenuPage />
+      },
+      {
+        path: "add-dish",
+        element: <AddDish />
+      },
+      {
+        path: "orders",
+        element: <ResturantOrders />
+      },
+      {
+        path: "editmenu/:id",
+        element: <EditMenuPage />
+      },
+    ],
+  },
+  {
     path: "/owner",
     // element: <RestutrantLayout />,
     // errorElement:<UserErrorPage/>,
     children: [
-        {
-            path: "login",
-            element: <ResturantLogin />
-            },
-            {
-              path:"create-restaurant",
-              element:<CreateRestaurant/>
-          },
-        
-          
-              
-           
-        ],
-},
-{
+      {
+        path: "login",
+        element: <ResturantLogin />
+      },
+      {
+        path: "create-restaurant",
+        element: <CreateRestaurant />
+      },
+
+
+
+
+    ],
+  },
+  {
     path: "/admin",
-    element:<AdminAuth><AdminLayout /></AdminAuth> ,
+    element: <AdminAuth><AdminLayout /></AdminAuth>,
     // errorElement: <UserErrorPage />,
     children: [
       {
@@ -165,7 +169,7 @@ export const router=createBrowserRouter([
         path: "categories",
         element: <CategoriesPage />
       },
-   
+
     ]
   },
   {
@@ -177,8 +181,8 @@ export const router=createBrowserRouter([
         path: "login",
         element: <AdminLogin />
       }
-      
+
     ]
   }
-  
+
 ])

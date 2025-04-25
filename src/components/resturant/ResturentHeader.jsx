@@ -100,8 +100,27 @@ export default function RestaurantOwnerPanel() {
                 isActive={location.pathname === '/restaurants/dashboard'}
                 badge={null}
               />
-              
-              <li>
+              <NavItem 
+                to="/restaurants/orders" 
+                icon={<ClipboardList size={20} />} 
+                label="Orders" 
+                isActive={location.pathname.includes('/restaurants/orders')}
+              /> 
+                    <NavItem 
+                      to="/restaurants/add-dish" 
+                      icon={null}
+                      label="Add New Dish" 
+                      isActive={location.pathname.includes('/restaurants/add-dish')}
+                      subItem
+                    />
+                    <NavItem 
+                      to="/restaurants/my-menu" 
+                      icon={null}
+                      label="My Menu" 
+                      isActive={location.pathname.includes('/restaurants/my-menu')}
+                      subItem
+                    />
+              {/* <li>
                 <button
                   onClick={() => toggleSection('menu')}
                   className={`flex items-center justify-between w-full p-3 rounded-lg transition duration-200 ${
@@ -124,58 +143,19 @@ export default function RestaurantOwnerPanel() {
                 
                 {expandedSection === 'menu' && (
                   <div className="ml-8 mt-1 space-y-1">
-                    <NavItem 
-                      to="/restaurants/my-menu" 
-                      icon={null}
-                      label="My Menu" 
-                      isActive={location.pathname.includes('/restaurants/my-menu')}
-                      subItem
-                    />
-                     <NavItem 
-                to="/restaurants/orders" 
-                icon={<ClipboardList size={20} />} 
-                label="Orders" 
-                isActive={location.pathname.includes('/restaurants/orders')}
-              /> 
-                    <NavItem 
-                      to="/restaurants/add-dish" 
-                      icon={null}
-                      label="Add New Dish" 
-                      isActive={location.pathname.includes('/restaurants/add-dish')}
-                      subItem
-                    />
+                    
+                     
                   </div>
                 )}
-              </li>
+              </li> */}
 
-              <NavItem 
-                to="/owner/customers" 
-                icon={<User size={20} />} 
-                label="Customers" 
-                isActive={location.pathname.includes('/owner/customers')}
-                badge="New"
-              />
-              
-              <NavItem 
-                to="/owner/settings" 
-                icon={<Settings size={20} />} 
-                label="Settings" 
-                isActive={location.pathname.includes('/owner/settings')}
-              />
+        
             </ul>
           </nav>
 
           {/* User & Logout Section */}
           <div className="mt-auto space-y-4">
-            <div className="p-3 bg-gray-100 rounded-lg flex items-center">
-              <div className="w-10 h-10 rounded-full bg-amber-500 flex items-center justify-center text-white font-bold mr-3">
-                RO
-              </div>
-              <div>
-                <p className="font-medium text-gray-800">Restaurant Owner</p>
-                <p className="text-xs text-gray-500">Admin</p>
-              </div>
-            </div>
+           
             
             <button
               onClick={logout}

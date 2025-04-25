@@ -89,7 +89,7 @@ export default function HomePage() {
       const response = await axiosInstance.post("/user/logout", {}, {
         withCredentials: true,
       });
-  
+      localStorage.removeItem("cartResturentId");
       console.log("Logout successful", response.data);
       toast.success(response.data.msg)
       setCarts([]);       // Clear cart

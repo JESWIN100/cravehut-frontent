@@ -182,7 +182,7 @@ const CartPage = () => {
 
           toast.success("Payment successful!");
           console.log("res",response);
-          localStorage.removeItem("cartRestaurantId");
+          localStorage.removeItem("cartResturentId");
           navigate('/success', { state: { order: res.data.order } });
         },
         prefill: {
@@ -215,7 +215,41 @@ const CartPage = () => {
     }
   };
 
-  
+  const getLocation = () => {
+    if (navigator.geolocation) {
+      toast.promise(
+        new Promise((resolve, reject) => {
+          navigator.geolocation.getCurrentPosition(
+            async (position) => {
+              try {
+                const { latitude, longitude } = position.coords;
+                // Use a geocoding service to get the address
+                const response = await axiosInstance.get(
+                  `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`
+                );
+                console.log('Geocoding response:', response.data);
+                const address = response.data.display_name;
+                setAddress(address);
+                resolve(address);
+              } catch (error) {
+                reject(error);
+              }
+            },
+            (error) => {
+              reject(error);
+            }
+          );
+        }),
+        {
+          loading: 'Fetching your location...',
+          success: (address) => `Location found: ${address}`,
+          error: (err) => `Could not get location (${err.message})`,
+        }
+      );
+    } else {
+      toast.error('Geolocation is not supported by your browser');
+    }
+  };
 
 
   return (
@@ -256,6 +290,16 @@ const CartPage = () => {
               <button onClick={handlePayment} className="w-full bg-green-500 text-white py-2 rounded font-medium hover:bg-green-600 transition">
                 SAVE ADDRESS & PROCEED
               </button>
+              <button 
+  type="button"
+  onClick={getLocation}
+  className="w-full mb-4 mt-5 bg-blue-500 text-white py-2 rounded font-medium hover:bg-blue-600 transition flex items-center justify-center gap-2"
+>
+  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+    <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
+  </svg>
+  Click here to get your correct location
+</button>
             </div>
   
             {/* Cart Items */}

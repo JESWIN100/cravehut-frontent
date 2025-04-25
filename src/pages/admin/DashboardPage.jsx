@@ -156,11 +156,18 @@ export default function RestaurantDashboard() {
       try {
         const response = await axiosInstance.get("/admin/getall", { withCredentials: true });
         const data = response.data;
+console.log(response);
 
+const totalPaid = data.payments
+.filter(payment => payment.paymentStatus === "paid")
+.reduce((sum, payment) => sum + payment.totalCost, 0);
+
+console.log("Total Paid:", totalPaid);
         const totalOrders = data?.payments?.length || 0;
-        const finalTotal = data?.finalTotal || 0;
+        const finalTotal = totalPaid || 0;
         const recentOrders = data?.payments?.slice(0, 6) || [];
 
+       
 
         setDashboardData({
           totalOrders,

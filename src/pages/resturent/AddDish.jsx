@@ -57,9 +57,9 @@ export default function AddDish() {
       formData.append('price', data.price);
       formData.append('description', data.description);
       formData.append('category', data.category);
-      formData.append('rating', data.rating);
-      formData.append('discount', data.discount || '');
-      formData.append('ingredients', data.ingredients);
+      // formData.append('rating', data.rating);
+      // formData.append('discount', data.discount || '');
+      // formData.append('ingredients', data.ingredients);
       formData.append('restaurant', profile._id);
       formData.append('availability', availability);
       formData.append('image', imageFile);
@@ -241,7 +241,7 @@ export default function AddDish() {
                   ))}
                 </TextField>
                 
-                <TextField
+                {/* <TextField
                   label="Rating"
                   type="number"
                   inputProps={{ step: '0.1', min: '0', max: '5' }}
@@ -256,9 +256,9 @@ export default function AddDish() {
                       boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.1)'
                     }
                   }}
-                />
+                /> */}
                 
-                <TextField
+                {/* <TextField
                   label="Any Discount?"
                   {...register('discount')}
                   error={!!errors.discount}
@@ -271,10 +271,10 @@ export default function AddDish() {
                       boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.1)'
                     }
                   }}
-                />
+                /> */}
               </Box>
               
-              <TextField
+              {/* <TextField
                 label="Ingredients"
                 {...register('ingredients', { required: 'Ingredients are required' })}
                 error={!!errors.ingredients}
@@ -287,7 +287,7 @@ export default function AddDish() {
                     boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.1)'
                   }
                 }}
-              />
+              /> */}
               
               <Box
                 sx={{

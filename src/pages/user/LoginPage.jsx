@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { toast } from "sonner";
 import { axiosInstance } from "../../config/axisoInstance";
 import { useNavigate } from "react-router-dom";
-
+import OtpInput from 'react-otp-input';
 export default function LoginPage({ setShowAuthModal }) {
   const [authMode, setAuthMode] = useState("login");
   const [step, setStep] = useState(1);
@@ -109,7 +109,16 @@ const navigate=useNavigate()
               </>
             ) : (
               <>
-                <input type="text" placeholder="Enter OTP" value={otpInput} onChange={(e) => setOtpInput(e.target.value)} className="w-full border rounded px-4 py-2 mb-4" />
+              <div className="flex justify-center items-center mb-5 border-x-cyan-950">
+              <OtpInput
+  value={otpInput}
+  onChange={setOtpInput}
+  numInputs={4}
+  separator={<span>-</span>}
+  renderInput={(props) => <input {...props} className="min-w-12 h-10 border text-center border-black mx-1 rounded" />}
+/>
+              </div>
+ 
                 <div className="flex justify-between gap-2">
                   <button onClick={handleVerifyOtp} className="bg-yellow-400 text-white px-4 py-2 rounded w-full">Verify OTP</button>
                   <button onClick={() => setStep(1)} className="text-gray-600 hover:text-black w-full">Back</button>

@@ -91,9 +91,9 @@ const RestaurantOrders = () => {
         return <Clock size={16} className="text-yellow-500" />;
       case 'preparing':
         return <ChefHat size={16} className="text-blue-500" />;
-      case 'ready':
+      case 'on-the-way':
         return <Package size={16} className="text-green-500" />;
-      case 'completed':
+      case 'delivered':
         return <CheckCircle size={16} className="text-gray-500" />;
       default:
         return <Clock size={16} />;
@@ -166,9 +166,9 @@ const RestaurantOrders = () => {
             </div>
           </div>
           <div className="bg-white p-4 rounded-lg shadow border">
-            <div className="text-gray-500 text-sm">Completed</div>
+            <div className="text-gray-500 text-sm">Delivered</div>
             <div className="text-2xl font-bold text-green-600">
-              {orders.filter(o => o.status === 'completed').length}
+              {orders.filter(o => o.status === 'delivered').length}
             </div>
           </div>
         </div>
@@ -217,8 +217,8 @@ const RestaurantOrders = () => {
                         <span className="text-amber-600 font-mono">#{order.id}</span>
                         <span className={`text-xs px-2 py-1 rounded-full flex items-center gap-1 ${
                           order.status === 'ready' ? 'bg-green-100 text-green-800' :
-                          order.status === 'preparing' ? 'bg-blue-100 text-blue-800' :
-                          order.status === 'completed' ? 'bg-gray-100 text-gray-800' :
+                          order.status === 'on-the-way' ? 'bg-blue-100 text-blue-800' :
+                          order.status === 'delivered' ? 'bg-gray-100 text-gray-800' :
                           'bg-yellow-100 text-yellow-800'
                         }`}>
                           {getStatusIcon(order.status)}
@@ -357,13 +357,13 @@ const RestaurantOrders = () => {
                               </div>
                               <div className="relative pl-8">
                                 <div className={`absolute left-0 top-0 w-4 h-4 rounded-full ${
-                                  order.status === 'preparing' || order.status === 'ready' || order.status === 'completed' 
+                                  order.status === 'preparing' || order.status === 'on-the-way' || order.status === 'delivered' 
                                     ? 'bg-blue-500 border-4 border-blue-100' 
                                     : 'bg-gray-300 border-4 border-gray-100'
                                 }`}></div>
                                 <div>
                                   <p className={`${
-                                    order.status === 'preparing' || order.status === 'ready' || order.status === 'completed' 
+                                    order.status === 'preparing' || order.status === 'on-the-way' || order.status === 'delivered' 
                                       ? 'font-medium' 
                                       : 'text-gray-400'
                                   }`}>Preparing</p>
@@ -374,33 +374,33 @@ const RestaurantOrders = () => {
                               </div>
                               <div className="relative pl-8">
                                 <div className={`absolute left-0 top-0 w-4 h-4 rounded-full ${
-                                  order.status === 'ready' || order.status === 'completed' 
+                                  order.status === 'on-the-way' || order.status === 'delivered' 
                                     ? 'bg-green-500 border-4 border-green-100' 
                                     : 'bg-gray-300 border-4 border-gray-100'
                                 }`}></div>
                                 <div>
                                   <p className={`${
-                                    order.status === 'ready' || order.status === 'completed' 
+                                    order.status === 'on-the-way' || order.status === 'delivered' 
                                       ? 'font-medium' 
                                       : 'text-gray-400'
                                   }`}>Ready</p>
-                                  {order.status === 'ready' && (
+                                  {order.status === 'on-the-way' && (
                                     <p className="text-sm text-green-500">Ready for {order.type === 'delivery' ? 'delivery' : 'pickup'}</p>
                                   )}
                                 </div>
                               </div>
                               <div className="relative pl-8">
                                 <div className={`absolute left-0 top-0 w-4 h-4 rounded-full ${
-                                  order.status === 'completed' 
+                                  order.status === 'delivered' 
                                     ? 'bg-gray-500 border-4 border-gray-100' 
                                     : 'bg-gray-300 border-4 border-gray-100'
                                 }`}></div>
                                 <div>
                                   <p className={`${
-                                    order.status === 'completed' 
+                                    order.status === 'delivered' 
                                       ? 'font-medium' 
                                       : 'text-gray-400'
-                                  }`}>Completed</p>
+                                  }`}>Delivered</p>
                                 </div>
                               </div>
                             </div>
@@ -411,7 +411,7 @@ const RestaurantOrders = () => {
 
                     {/* Actions */}
                     <div className="mt-6 flex flex-wrap gap-3">
-                      {order.status !== 'completed' && (
+                      {order.status !== 'delivered' && (
                         <>
                           {order.status === 'placed' && (
                             <button
@@ -423,14 +423,14 @@ const RestaurantOrders = () => {
                           )}
                           {order.status === 'preparing' && (
                             <button
-                              onClick={() => handleStatusChange(order.id, 'ready')}
+                              onClick={() => handleStatusChange(order.id, 'on-the-way')}
                               className="px-4 py-2 bg-green-100 text-green-800 rounded-lg hover:bg-green-200 flex items-center gap-2 transition"
                             >
                               <Package size={16} /> Mark as Ready
                             </button>
                           )}
                           <button
-                            onClick={() => handleStatusChange(order.id, 'completed')}
+                            onClick={() => handleStatusChange(order.id, 'delivered')}
                             className="px-4 py-2 bg-gray-100 text-gray-800 rounded-lg hover:bg-gray-200 flex items-center gap-2 transition"
                           >
                             <CheckCircle size={16} /> Complete Order

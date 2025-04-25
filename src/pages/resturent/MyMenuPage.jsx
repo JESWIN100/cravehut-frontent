@@ -16,9 +16,11 @@ import {
     Pagination,
   } from '@mui/material';
 
-  import { Add, Search as SearchIcon, MoreVert, Star } from '@mui/icons-material';
+  import { Add, Search as SearchIcon, MoreVert, Star, Edit, Delete } from '@mui/icons-material';
+
   import React, { useEffect, useState } from 'react';
   import { axiosInstance } from '../../config/axisoInstance';
+import { useNavigate } from 'react-router-dom';
   
   export default function MyMenuPage() {
     const [profile, setProfile] = useState([]);
@@ -27,12 +29,14 @@ import {
     const [categoryFilter, setCategoryFilter] = useState('all');
     const [filteredFoods, setFilteredFoods] = useState([]);
     const [categories, setCategories] = useState([]);
-  
+  const navigate=useNavigate()
     useEffect(() => {
       const getRestaurant = async () => {
         try {
           const response = await axiosInstance.get("/resturent/getallbyid", { withCredentials: true });
           setProfile(response.data.data);
+          console.log(response.data.data);
+          
         } catch (error) {
           console.error("Error fetching restaurant:", error);
         }
@@ -43,6 +47,8 @@ import {
     useEffect(() => {
       const getDishes = async () => {
         if (!profile?._id) return;
+        console.log(profile._id);
+        
         try {
           const response = await axiosInstance.get(`/resturent/getresturantfood/${profile._id}`, {
             withCredentials: true,
@@ -74,14 +80,22 @@ import {
       setCategories(uniqueCategories);
     }, [dishes, searchQuery, categoryFilter]);
   
+
+
+
+
+
+
+
     return (
       <Box sx={{ ml: { lg: '280px' }, p: 3, bgcolor: '#f9fafb', minHeight: '100vh' }}>
         {/* Header */}
         <Box display="flex" flexDirection={{ xs: 'row', md: 'row' }} justifyContent="space-between" alignItems="center" mb={3}>
           <Typography variant="h5" fontWeight="bold">Food Menu Management</Typography>
-          <Button  variant="contained" sx={{ mt: { xs: 2, md: 0 } }}>
-            Add Food 
-          </Button>
+          <Button onClick={() => navigate("/restaurants/add-dish")} variant="contained" sx={{ mt: { xs: 2, md: 0 } }}>
+  Add Food
+</Button>
+
         </Box>
   
         {/* Filters */}
@@ -151,10 +165,13 @@ import {
                       </Box>
                     </TableCell>
                     <TableCell align="right">
-                      <IconButton>
-                        <MoreVert />
-                      </IconButton>
-                    </TableCell>
+  <IconButton onClick={() => navigate(`/restaurants/editmenu/${food._id}`)}>
+    <Edit />
+  </IconButton>
+  <IconButton onClick={() => handleDelete(food._id)}>
+    <Delete />
+  </IconButton>
+</TableCell>
                   </TableRow>
                 ))}
               </TableBody>
