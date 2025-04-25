@@ -1,7 +1,7 @@
-import { Search, Plus, MoreVertical } from 'lucide-react';
+import { Search, Plus, MoreVertical, Trash } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { axiosInstance } from "../../config/axisoInstance";
-
+import { toast } from 'sonner';
 export default function Restaurants() {
   const [resturants, setResturant] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
@@ -26,6 +26,24 @@ export default function Restaurants() {
   const filteredRestaurants = resturants.filter((restaurant) =>
     restaurant.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+
+const handleDelete=async(id)=>{
+  const confirmDelete = window.confirm("Are you sure you want to delete this resturant?");
+    
+  if (!confirmDelete) return;
+ try {
+  const response=await axiosInstance.delete(`/admin/delete-resturent/${id}`,{withCredentials:true})
+  toast.success(response.data.msg)
+  setResturant((prev) => prev.filter((r) => r._id !== id));
+ } catch (error) {
+  console.log(error);
+  
+ }
+  
+}
+
+
 
   return (
     <div className='lg:ml-64 p-6'>
@@ -112,10 +130,10 @@ export default function Restaurants() {
                             </div>
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                            <button className="text-gray-400 hover:text-gray-600">
-                              <MoreVertical size={18} />
-                            </button>
-                          </td>
+  <button onClick={()=>handleDelete(restaurant._id)}  className="text-red-500 hover:text-red-700">
+    <Trash  size={18} />
+  </button>
+</td>
                         </tr>
                       ))}
                     </tbody>

@@ -1,52 +1,82 @@
 import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import axios from 'axios';
 import { axiosInstance } from '../../config/axisoInstance';
 
 export default function CategoriesPage() {
   const [categories, setCategories] = useState([]);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editCategoryId, setEditCategoryId] = useState(null);
+
   const {
     register,
     handleSubmit,
     reset,
+    setValue,
     formState: { errors },
   } = useForm();
 
+  const fetchCategory = async () => {
+    try {
+      const response = await axiosInstance.get('/admin/getallCategory', { withCredentials: true });
+      setCategories(response.data.categories);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
-    const fetchCategory = async () => {
-      try {
-        const response = await axiosInstance.get("/admin/getallCategory", { withCredentials: true });
-        console.log("rs",response.data.categories);
-        setCategories(response.data.categories);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-  
     fetchCategory();
   }, []);
-  
-
 
   const onSubmit = async (data) => {
     const formData = new FormData();
     formData.append('name', data.name);
     formData.append('description', data.description);
-    formData.append('image', data.image[0]); // First file from file input
+    if (data.image[0]) formData.append('image', data.image[0]);
 
     try {
-      const response = await axiosInstance.post('/admin/createCategory', formData,{withCredentials:true} ,{
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-console.log(response);
-
-      // Update categories state with response from backend
-    //   setCategories([...categories, response.data]);
-    //   reset();
+      if (isEditing && editCategoryId) {
+        // Edit category
+      const res=  await axiosInstance.put(`/admin/update-category/${editCategoryId}`, formData, {
+          withCredentials: true,
+          headers: { 'Content-Type': 'multipart/form-data' },
+        });
+        console.log(res);
+        
+      } else {
+        // Create category
+        await axiosInstance.post('/admin/createCategory', formData, {
+          withCredentials: true,
+          headers: { 'Content-Type': 'multipart/form-data' },
+        });
+      }
+      reset();
+      setIsEditing(false);
+      setEditCategoryId(null);
+      fetchCategory();
     } catch (err) {
-      console.error('Error uploading category:', err);
+      console.error('Error:', err);
+    }
+  };
+
+  const handleEdit = (category) => {
+    setIsEditing(true);
+    setEditCategoryId(category._id);
+    setValue('name', category.name);
+    setValue('description', category.description);
+    // Image field can't be set programmatically
+  };
+
+  const handleDelete = async (id) => {
+    const confirmDelete = window.confirm("Are you sure you want to delete this category?");
+    
+    if (!confirmDelete) return;
+  
+    try {
+      await axiosInstance.delete(`/admin/delete-Category/${id}`, { withCredentials: true });
+      fetchCategory();
+    } catch (err) {
+      console.error('Delete Error:', err);
     }
   };
 
@@ -54,44 +84,37 @@ console.log(response);
     <div className="lg:ml-64 p-6 min-h-screen bg-gray-50">
       <h1 className="text-3xl font-bold mb-6 text-blue-700">Manage Categories</h1>
 
-      {/* Add Category Form */}
+      {/* Form */}
       <div className="bg-white p-6 rounded shadow mb-8 max-w-md">
-        <h2 className="text-xl font-semibold mb-4">Add New Category</h2>
+        <h2 className="text-xl font-semibold mb-4">{isEditing ? 'Edit Category' : 'Add New Category'}</h2>
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4" encType="multipart/form-data">
-          <div>
-            <input
-              type="text"
-              placeholder="Category name"
-              {...register('name', { required: 'Name is required' })}
-              className="w-full p-2 border border-gray-300 rounded"
-            />
-            {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name.message}</p>}
-          </div>
+          <input
+            type="text"
+            placeholder="Category name"
+            {...register('name', { required: 'Name is required' })}
+            className="w-full p-2 border border-gray-300 rounded"
+          />
+          {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name.message}</p>}
 
-          <div>
-            <textarea
-              placeholder="Category description"
-              {...register('description', { required: 'Description is required' })}
-              className="w-full p-2 border border-gray-300 rounded"
-            />
-            {errors.description && <p className="text-red-500 text-sm mt-1">{errors.description.message}</p>}
-          </div>
+          <textarea
+            placeholder="Category description"
+            {...register('description', { required: 'Description is required' })}
+            className="w-full p-2 border border-gray-300 rounded"
+          />
+          {errors.description && <p className="text-red-500 text-sm mt-1">{errors.description.message}</p>}
 
-          <div>
-            <input
-              type="file"
-              accept="image/*"
-              {...register('image', { required: 'Image is required' })}
-              className="w-full p-2 border border-gray-300 rounded"
-            />
-            {errors.image && <p className="text-red-500 text-sm mt-1">{errors.image.message}</p>}
-          </div>
+          <input
+            type="file"
+            accept="image/*"
+            {...register('image')}
+            className="w-full p-2 border border-gray-300 rounded"
+          />
 
           <button
             type="submit"
             className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
           >
-            Add Category
+            {isEditing ? 'Update Category' : 'Add Category'}
           </button>
         </form>
       </div>
@@ -103,15 +126,30 @@ console.log(response);
           <p className="text-gray-500">No categories added yet.</p>
         ) : (
           <div className="grid gap-6 md:grid-cols-4 grid-cols-2">
-            {categories.map((category, index) => (
-              <div key={index} className="border  rounded p-4">
+            {categories.map((category) => (
+              <div key={category._id} className="border rounded p-4 relative">
                 <img
-                  src={category.image} // Ensure backend sends the image URL
+                  src={category.image}
                   alt={category.name}
                   className="w-full h-40 object-contain rounded mb-3"
                 />
                 <h3 className="text-lg font-bold">{category.name}</h3>
-                <p className="text-gray-700 text-sm">{category.description}</p>
+                <p className="text-gray-700 text-sm mb-2">{category.description}</p>
+
+                <div className="flex justify-between mt-2">
+                  <button
+                    className="bg-green-500 text-white px-3 py-1 rounded text-sm"
+                    onClick={() => handleEdit(category)}
+                  >
+                    Edit
+                  </button>
+                  <button
+                    className="bg-red-500 text-white px-3 py-1 rounded text-sm"
+                    onClick={() => handleDelete(category._id)}
+                  >
+                    Delete
+                  </button>
+                </div>
               </div>
             ))}
           </div>

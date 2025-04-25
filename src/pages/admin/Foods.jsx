@@ -1,58 +1,11 @@
-import { Search, Plus, MoreVertical, Frown, Star, Sliders } from 'lucide-react';
+import { Search, Plus, MoreVertical, Frown, Star, Sliders, Trash } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { axiosInstance } from '../../config/axisoInstance';
+import { toast } from 'sonner';
 
 export default function Foods() {
   const [searchQuery, setSearchQuery] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('all');
-  
-  // const foods = [
-  //   { 
-  //     id: 1, 
-  //     name: "Cheeseburger", 
-  //     restaurant: "Burger King", 
-  //     price: "$5.99", 
-  //     category: "Burgers",
-  //     rating: 4.2,
-  //     image: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?ixlib=rb-1.2.1&auto=format&fit=crop&w=100&h=100&q=80"
-  //   },
-  //   { 
-  //     id: 2, 
-  //     name: "Pepperoni Pizza", 
-  //     restaurant: "Pizza Hut", 
-  //     price: "$12.99", 
-  //     category: "Pizza",
-  //     rating: 4.5,
-  //     image: "https://images.unsplash.com/photo-1513104890138-7c749659a591?ixlib=rb-1.2.1&auto=format&fit=crop&w=100&h=100&q=80"
-  //   },
-  //   { 
-  //     id: 3, 
-  //     name: "California Roll", 
-  //     restaurant: "Sushi Palace", 
-  //     price: "$8.99", 
-  //     category: "Sushi",
-  //     rating: 4.8,
-  //     image: "https://images.unsplash.com/photo-1579871494447-9811cf80d66c?ixlib=rb-1.2.1&auto=format&fit=crop&w=100&h=100&q=80"
-  //   },
-  //   { 
-  //     id: 4, 
-  //     name: "Chicken Taco", 
-  //     restaurant: "Taco Bell", 
-  //     price: "$3.49", 
-  //     category: "Mexican",
-  //     rating: 3.9,
-  //     image: "https://images.unsplash.com/photo-1565299585323-38d6b0865b47?ixlib=rb-1.2.1&auto=format&fit=crop&w=100&h=100&q=80"
-  //   },
-  //   { 
-  //     id: 5, 
-  //     name: "Big Mac", 
-  //     restaurant: "McDonald's", 
-  //     price: "$4.99", 
-  //     category: "Burgers",
-  //     rating: 4.1,
-  //     image: "https://images.unsplash.com/photo-1561758033-d89a9ad46330?ixlib=rb-1.2.1&auto=format&fit=crop&w=100&h=100&q=80"
-  //   },
-  // ];
 
 
   const [foods, setFood] = useState([]);
@@ -61,9 +14,9 @@ export default function Foods() {
   useEffect(() => {
     const fetchFoods = async () => {
       try {
-        const response = await axiosInstance.get("/admin/Admingetall",{withCredentials:true});
+        const response = await axiosInstance.get("/admin/Admingetall", { withCredentials: true });
         console.log(response);
-        
+
         setFood(response.data.foods);
       } catch (error) {
         console.log(error);
@@ -76,12 +29,27 @@ export default function Foods() {
   }, []);
 
 
+const handleDelete=async(id)=>{
+  const confirmDelete = window.confirm("Are you sure you want to delete this food?");
+    
+  if (!confirmDelete) return;
+  try {
+    const response=await axiosInstance.delete(`/admin/deletefood/${id}`,{withCredentials:true})
+    console.log(response);
+    toast.success(response.data.msg)
+    setFood((prev) => prev.filter((r) => r._id !== id));
+  } catch (error) {
+    console.log(error);
+    
+  }
+}
+
 
 
   const categories = [...new Set(foods.map(food => food.category))];
   const filteredFoods = foods.filter(food => {
-    const matchesSearch = food.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                         food.restaurant.name.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesSearch = food.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      food.restaurant.name.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesCategory = categoryFilter === 'all' || food.category === categoryFilter;
     return matchesSearch && matchesCategory;
   });
@@ -101,9 +69,9 @@ export default function Foods() {
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
           <div className="relative flex-1 max-w-md">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
-            <input 
-              type="text" 
-              placeholder="Search food items..." 
+            <input
+              type="text"
+              placeholder="Search food items..."
               className="pl-10 pr-4 py-2 w-full border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
@@ -112,7 +80,7 @@ export default function Foods() {
           <div className="flex items-center gap-2">
             <div className="relative">
               <Sliders className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
-              <select 
+              <select
                 className="pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent appearance-none bg-white"
                 value={categoryFilter}
                 onChange={(e) => setCategoryFilter(e.target.value)}
@@ -171,10 +139,10 @@ export default function Foods() {
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                      <button className="text-gray-400 hover:text-gray-600 p-1 rounded-full hover:bg-gray-100">
-                        <MoreVertical size={18} />
-                      </button>
-                    </td>
+  <button onClick={()=>handleDelete(food._id)}  className="text-red-500 hover:text-red-700">
+    <Trash  size={18} />
+  </button>
+</td>
                   </tr>
                 ))}
               </tbody>

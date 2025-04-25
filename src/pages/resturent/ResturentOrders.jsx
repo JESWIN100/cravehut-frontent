@@ -201,7 +201,7 @@ const RestaurantOrders = () => {
         {/* Orders List */}
         <div className="bg-white rounded-lg shadow overflow-hidden">
           {filteredOrders.length > 0 ? (
-            filteredOrders.map(order => (
+            filteredOrders.reverse().map(order => (
               <div key={order.id} className="border-b">
                 {/* Order Summary */}
                 <div

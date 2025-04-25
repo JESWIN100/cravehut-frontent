@@ -125,7 +125,7 @@ console.log(paginatedOrders);
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
-  {paginatedOrders.map((order) => (
+  {paginatedOrders.reverse().map((order) => (
     <tr key={order._id} className="hover:bg-gray-50">
       <td className="px-6 py-4 whitespace-nowrap text-blue-600 font-medium text-sm">
         {order._id.slice(-6).toUpperCase()}
