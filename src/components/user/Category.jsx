@@ -28,30 +28,31 @@ const navigate=useNavigate()
   
   
   return (
-    <div className="p-4 relative px-6 py-6 max-w-6xl mx-auto ">
-  <h2 className="text-center text-2xl font-bold mb-4">What's on your mind?</h2>
+    <div className="p-4 relative px-6 py-6 max-w-6xl mx-auto">
+    <h2 className="text-center text-2xl font-bold mb-4">What's on your mind?</h2>
   
-  {/* Make sure this div allows horizontal scroll */}
-  <div className="">
-    {/* This is the scrollable row */}
-    <div className=" grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-7 gap-6">
-      {foodItems.map((item, index) => (
-        <div 
-          key={index} 
-          className="flex-none flex flex-col items-center w-48  transform transition-transform duration-300 hover:scale-110 hover:rounded-shadow-xl"  
-          onClick={() => nextPage(item.name)}
-        >
-          <img 
-            src={item.image} 
-            alt={item.name} 
-            className="w-36 rounded-full object-cover mb-2 cursor-pointer" 
-          />
-          <span className="text-center">{item.name}</span>
-        </div>
-      ))}
+    {/* Use grid layout and adjust columns based on screen size */}
+    <div className="">
+      <div className="grid grid-cols-2  sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-7 gap-6 ">
+
+        {foodItems.map((item, index) => (
+          <div 
+            key={index} 
+            className="flex-none flex flex-col pr-12 items-center w-48 transform transition-transform duration-300 hover:scale-110 hover:rounded-shadow-xl"  
+            onClick={() => nextPage(item.name)}
+          >
+            <img 
+              src={item.image} 
+              alt={item.name} 
+              className="w-36 rounded-full object-cover mb-2 cursor-pointer" 
+            />
+            <span className="text-center">{item.name}</span>
+          </div>
+        ))}
+      </div>
     </div>
   </div>
-</div>
+  
 
   
   
