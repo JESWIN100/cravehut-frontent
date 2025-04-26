@@ -120,7 +120,7 @@ export default function CategoriesPage() {
       </div>
 
       {/* Display Categories */}
-      <div className="bg-white p-6 rounded shadow max-w-4xl">
+      <div className="bg-white p-6 rounded shadow ">
         <h2 className="text-xl font-semibold mb-4">Category List</h2>
         {categories.length === 0 ? (
           <p className="text-gray-500">No categories added yet.</p>

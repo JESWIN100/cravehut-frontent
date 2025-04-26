@@ -207,6 +207,20 @@ className="flex items-center space-x-1 text-white hover:text-yellow-400 transiti
             <ul className="flex flex-col space-y-4">
               <li><a href="#category" className="flex items-center space-x-1 text-white hover:text-yellow-400"><Home size={18} /><span>Home</span></a></li>
               <li><a href="#restaurant" className="flex items-center space-x-1 text-white hover:text-yellow-400"><Utensils size={18} /><span>Restaurants</span></a></li>
+              {!userState || Object.keys(userState).length === 0 ?(
+          null
+) : 
+<Link to={"/my-orders"}>
+<button 
+
+className="flex items-center space-x-1 text-white hover:text-yellow-400 transition-colors duration-300"
+>
+<BriefcaseBusiness size={18}  />
+
+<span>My Orders</span>
+</button>
+</Link>
+ }
               <li><a href="/cart" className="flex items-center space-x-1 text-white hover:text-yellow-400"><ShoppingBag size={18} /><span>Cart</span></a></li>
               <li>
                 {!userState || Object.keys(userState).length === 0 ? (
