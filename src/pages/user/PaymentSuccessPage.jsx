@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { CheckCircle, Clock, MapPin, Phone, Utensils, Home } from 'lucide-react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 const PaymentSuccessPage = () => {
 
-
+const naviagte=useNavigate()
   const location = useLocation();
   const order = location.state?.order;
 
@@ -29,6 +29,14 @@ console.log(order);
     total: 455,
     paymentMethod: 'UPI (PhonePe)'
   };
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      naviagte('/');
+    }, 8000); // waits for 3 seconds before redirecting
+
+  }, []);
+
 
   return (
     <div className="min-h-screen bg-gray-50 p-8">

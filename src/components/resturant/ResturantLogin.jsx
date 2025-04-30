@@ -16,7 +16,7 @@ export default function RestaurantAuth() {
       const url = isLogin ? "/resturent/login" : "/resturent/register";
       const payload = isLogin
         ? { email, password }
-        : { name, email, password };
+        : { name, email, password,confirmPassword:password,role:"restaurant" };
 
       const response = await axiosInstance.post(url, payload, {
         withCredentials: true,
@@ -29,6 +29,8 @@ export default function RestaurantAuth() {
         });
       }
     } catch (error) {
+      console.log(error);
+      
       console.error("Auth Error:", error.response.data);
       toast(error.response.data.error ||error.response.data.msg )
     }

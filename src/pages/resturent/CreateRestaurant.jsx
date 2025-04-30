@@ -9,9 +9,8 @@ const CreateRestaurant = () => {
     contactNumber: "",
     cuisineType: "",
     ratings: 0,
-    operatingHours: { open: "", close: "" },
-    menuItems: ["", "", ""], // Three menu items inputs
-    deliveryAvailable: false,
+
+    deliveryAvailable: true,
     category: "",
     offers: "",
   });
@@ -26,7 +25,7 @@ const CreateRestaurant = () => {
     if (name === "open" || name === "close") {
       setFormData((prev) => ({
         ...prev,
-        operatingHours: { ...prev.operatingHours, [name]: value },
+      
       }));
     } else if (type === "checkbox") {
       setFormData((prev) => ({ ...prev, [name]: checked }));
@@ -54,10 +53,7 @@ const CreateRestaurant = () => {
         value.forEach((item, index) => {
           form.append(`menuItems[${index}]`, item);
         });
-      } else if (key === "operatingHours") {
-        form.append("operatingHours[open]", value.open);
-        form.append("operatingHours[close]", value.close);
-      } else {
+      }  else {
         form.append(key, value);
       }
     });
@@ -88,9 +84,11 @@ const CreateRestaurant = () => {
       {/* Wider container (max-w-4xl) with reduced height */}
       <div className="w-full max-w-4xl bg-white bg-opacity-90 backdrop-blur-sm rounded-xl shadow-2xl overflow-hidden">
         {/* Header with accent bar */}
-        <div className="bg-amber-600 px-6 py-4">
-          <h2 className="text-2xl font-bold text-white">Create Restaurant</h2>
-        </div>
+        <div className="bg-amber-600 px-6 py-4 rounded-lg shadow-lg">
+  <h2 className="text-2xl font-bold text-white sm:text-3xl">Fill out the details to create your restaurant page</h2>
+  <p className="text-white text-sm sm:text-base mt-2">Please provide all necessary information to set up your restaurant profile.</p>
+</div>
+
     
         <form onSubmit={handleSubmit} className="p-6">
           {/* Grid with 3 columns for wider screens */}
@@ -119,16 +117,7 @@ const CreateRestaurant = () => {
                 />
               </div>
     
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Open Time*</label>
-                <input
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-amber-500"
-                  name="open"
-                  placeholder="09:00 AM"
-                  onChange={handleChange}
-                  required
-                />
-              </div>
+            
             </div>
     
             {/* Column 2 */}
@@ -155,16 +144,6 @@ const CreateRestaurant = () => {
                 />
               </div>
     
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Close Time*</label>
-                <input
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-amber-500"
-                  name="close"
-                  placeholder="10:00 PM"
-                  onChange={handleChange}
-                  required
-                />
-              </div>
             </div>
     
             {/* Column 3 */}
@@ -209,37 +188,7 @@ const CreateRestaurant = () => {
           {/* Full-width elements below the 3 columns */}
           <div className="mt-4 space-y-4">
             {/* Menu Items (single row scroll if many) */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Menu Items</label>
-              <div className="flex gap-2 overflow-x-auto pb-2">
-                {formData.menuItems.map((item, index) => (
-                  <div key={index} className="flex-shrink-0 flex items-center gap-1">
-                    <input
-                      className="px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-amber-500 min-w-[160px]"
-                      value={item}
-                      placeholder={`Item ${index + 1}`}
-                      onChange={(e) => handleMenuItemChange(index, e.target.value)}
-                    />
-                    {index > 0 && (
-                      <button
-                        type="button"
-                        onClick={() => removeMenuItem(index)}
-                        className="text-red-500 hover:text-red-700"
-                      >
-                        ✕
-                      </button>
-                    )}
-                  </div>
-                ))}
-                {/* <button
-                  type="button"
-                  // onClick={addMenuItem}
-                  className="flex-shrink-0 bg-amber-100 text-amber-800 px-3 py-2 rounded-md hover:bg-amber-200"
-                >
-                  + Add
-                </button> */}
-              </div>
-            </div>
+          
     
             {/* Delivery + File Upload in one row */}
             <div className="flex flex-wrap gap-4 items-center">

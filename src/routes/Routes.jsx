@@ -29,6 +29,7 @@ import PaymentSuccessPage from "../pages/user/PaymentSuccessPage";
 import MyOrdersPage from "../pages/user/MyOdersPage";
 import ResturantOrders from "../pages/resturent/ResturentOrders";
 import EditMenuPage from "../pages/resturent/EditMenuPage";
+import { UserAuth } from "./protectedRoutes/UserAuth";
 
 
 
@@ -73,10 +74,7 @@ export const router = createBrowserRouter([
         element: <CategoryDetailPage />
       },
 
-      {
-        path: "cart",
-        element: <Cartpage />
-      },
+     
       {
         path: "/terms",
         element: <TermsAndCondition />
@@ -85,6 +83,21 @@ export const router = createBrowserRouter([
         path: "/about",
         element: <AboutUs />
       },
+     
+
+    ],
+  },
+  {
+    path: "/",
+    element:<UserAuth><RootLayout /></UserAuth> ,
+    errorElement: <UserErrorPage />,
+    children: [
+
+      {
+        path: "cart",
+        element: <Cartpage />
+      },
+     
       {
         path: "my-orders",
         element: < MyOrdersPage />
@@ -92,6 +105,8 @@ export const router = createBrowserRouter([
 
     ],
   },
+
+
   {
     path: "/restaurants",
     element: <ResturantAuth><RestutrantLayout /></ResturantAuth>,

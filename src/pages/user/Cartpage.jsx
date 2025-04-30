@@ -10,6 +10,8 @@ const CartPage = () => {
   const [cart, setCarts] = useState([]);
   const [cartId, setCartId] = useState('');
   const [details, setDetails] = useState([]);
+  const [isVerifyingPayment, setIsVerifyingPayment] = useState(false);
+
   setDetails
   const navigate=useNavigate()
 
@@ -163,9 +165,9 @@ const CartPage = () => {
         console.error('Razorpay SDK not loaded');
         return;
       }
-
+      
       const options = {
-        key: 'rzp_test_pEZkADDtQIAgoQ',
+        key: 'rzp_test_Yh0fPwTheqXsx5',
         amount: paymentOrder.amount,
         currency: paymentOrder.currency,
         name: formData.name,
@@ -173,7 +175,7 @@ const CartPage = () => {
         order_id: paymentOrder.id,
         handler: async function (response) {
           console.log('Payment successful', response);
-
+          setIsVerifyingPayment(true);
           const res =  await axiosInstance.post('/payment/verify', {
             razorpay_order_id: response.razorpay_order_id,
             razorpay_payment_id: response.razorpay_payment_id,
@@ -212,6 +214,9 @@ const CartPage = () => {
     } catch (error) {
       console.error('Error during payment:', error);
       alert("Payment failed.");
+    }
+    finally {
+      setIsVerifyingPayment(false);
     }
   };
 
@@ -367,6 +372,15 @@ const CartPage = () => {
          
         </div>
       )}
+      {isVerifyingPayment && (
+  <div className="fixed inset-0 bg-opacity-50 bg-black flex justify-center items-center z-50">
+   <img
+     src="https://assets-v2.lottiefiles.com/a/b8cd0fc4-1177-11ee-816f-8f04b81d486f/0vy75uYgnG.gif"
+     alt="Loading..."
+     style={{ width: "200px", height: "200px" }}
+   />
+  </div>
+)}
     </div>
   );
   

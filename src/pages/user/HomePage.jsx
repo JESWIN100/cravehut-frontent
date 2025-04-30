@@ -106,6 +106,7 @@ export default function HomePage() {
 
 
 
+console.log("searchResults",searchResults);
 
   
 
@@ -273,7 +274,7 @@ className="flex items-center space-x-1 text-white hover:text-yellow-400 transiti
               <ul className="py-2">
                 {searchResults.map((result) => (
                   <li key={result.id}>
-                    <a href={`/resturant/${result.restaurant._id}`} className="block px-4 py-3 hover:bg-gray-100 transition-colors duration-200">
+                    <a href={`/resturant/${result?.restaurant?._id}`} className="block px-4 py-3 hover:bg-gray-100 transition-colors duration-200">
                       <div className="flex items-start space-x-4">
                         {result.image && <img src={result.image} alt={result.name} className="w-12 h-12 rounded-full object-cover" />}
                         <div className="flex-1">

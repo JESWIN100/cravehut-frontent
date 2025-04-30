@@ -29,6 +29,10 @@ const navigate=useNavigate()
         confirmPassword: confirmPasswordInput,
       },{withCredentials:true});
       toast.success(response.data.msg);
+      setTimeout(() => {
+        setShowAuthModal(false);  // Then close the modal
+        window.location.reload(); // Reload after modal is gone
+      }, 1000); // 1 second delay
       setShowAuthModal(false);
     } catch (error) {
       toast.error(error.response?.data?.msg || "Server error");

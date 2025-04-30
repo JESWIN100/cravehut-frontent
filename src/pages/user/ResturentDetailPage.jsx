@@ -147,42 +147,54 @@ const handleAddToCart = async (foodItem) => {
 
   {/* Check if food data is available */}
   {foods && foods.length > 0 ? (
-    foods.map((food, index) => (
-      <div
-        key={index}
-        className="bg-white shadow-lg rounded-2xl p-4 flex mt-4 min-w-[200px] md:min-w-[300px] lg:min-w-[1100px] lg:max-w-[1100px]"
-      >
-        <img
-          src={food.image}
-          alt={food.name}
-          className="rounded-xl object-cover w-[80px] h-[80px]"
-        />
-        <div className="ml-4 flex-1">
-          <h3 className="font-bold">{food.name}</h3>
-          <p className="text-gray-600 text-sm">{food.description}</p>
-        </div>
-        <div className="text-right">
-          <p className="text-gray-700">Rating: {food.ratings}</p>
-          <p className="text-gray-700">Price: ₹{food.price}</p>
-          <button
-            className="mt-2 bg-yellow-500 text-white px-3 py-1 rounded-lg"
-            onClick={() => addToCart(food)}
-          >
-            Add
-          </button>
-        </div>
+  <div className="grid gap-3 p-2 w-11/12">
+    {foods.map((food, index) => (
+    <div
+    key={index}
+    className= "bg-white  rounded-2xl shadow-sm p-4 flex justify-between items-center  "
+  >
+    <div className="flex-1">
+      <h4 className="text-md font-bold">{food.name}</h4>
+      <p className="text-gray-900 text-xl font-bold mt-1">₹{food.price}</p>
+
+
+      <div className="text-green-600 text-sm mt-1">
+        ★ {food.ratings} ({food.totalRatings})
       </div>
-    ))
-  ) : (
-    <div className="text-center mt-10">
-      <img
-        src="https://img.freepik.com/free-vector/hand-drawn-no-data-concept_52683-127823.jpg?semt=ais_country_boost&w=740"
-        alt="No Food Data"
-        className="bg-transparent w-96  mx-auto"
-      />
-      <p className="text-gray-500 mt-4">No food items found</p>
+      <p className="text-gray-500 text-sm mt-1">{food.description}</p>
     </div>
-  )}
+    <div className="flex flex-col items-center">
+      <img
+        src={food.image}
+        alt={food.name}
+        className="rounded-lg object-cover w-24 h-20 mb-2"
+      />
+      <button
+        className="bg-green-600 text-white px-4 py-1 rounded-md hover:bg-green-700 transition"
+        onClick={() => addToCart(food)}
+      >
+        ADD
+      </button>
+    </div>
+  </div>
+    ))}
+  </div>
+) : (
+  <div className="flex flex-col items-center justify-center p-4 h-[60vh]">
+    <img
+      src="https://img.freepik.com/free-vector/hand-drawn-no-data-concept_52683-127823.jpg"
+      alt="No Food Data"
+      className="w-48 opacity-80"
+    />
+    <p className="text-gray-400 mt-4 text-sm">No food items found</p>
+    <button 
+      className="mt-4 text-yellow-500 text-sm font-medium"
+      onClick={() => window.location.reload()}
+    >
+      Try Again
+    </button>
+  </div>
+)}
    <Dialog open={showConfirm} onClose={handleConfirmNo}>
         <DialogTitle>Replace Cart?</DialogTitle>
         <DialogContent>

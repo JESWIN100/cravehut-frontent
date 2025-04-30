@@ -49,10 +49,7 @@ const handleDelete=async(id)=>{
     <div className='lg:ml-64 p-6'>
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">Restaurants Management</h1>
-        <button className="bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center hover:bg-blue-700 transition">
-          <Plus size={18} className="mr-2" />
-          Add Restaurant
-        </button>
+        
       </div>
 
       <div className="bg-white p-6 rounded-lg shadow mb-6">
@@ -73,14 +70,7 @@ const handleDelete=async(id)=>{
                   onChange={(e) => setSearchTerm(e.target.value)}
                 />
               </div>
-              <div className="flex space-x-2">
-                <select className="border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                  <option>All Status</option>
-                  <option>Active</option>
-                  <option>Pending</option>
-                  <option>Disabled</option>
-                </select>
-              </div>
+              
             </div>
 
             {filteredRestaurants.length === 0 ? (

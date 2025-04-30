@@ -165,7 +165,7 @@ export default function EditFoodPage() {
             onChange={handleChange}
           >
             {categories.map((cat) => (
-              <MenuItem key={cat._id} value={cat._id}>
+              <MenuItem key={cat._id} value={cat.name}>
                 {cat.name}
               </MenuItem>
             ))}

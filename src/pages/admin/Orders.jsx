@@ -24,6 +24,8 @@ export default function Orders() {
           withCredentials: true,
         });
         const data = response.data;
+        console.log(data);
+        
         const recentOrders = data?.payments || [];
         setDashboardData({ recentOrders });
       } catch (error) {
@@ -64,7 +66,7 @@ export default function Orders() {
     if (currentPage < totalPages) setCurrentPage(currentPage + 1);
   };
 
-console.log(paginatedOrders);
+console.log("dfd",paginatedOrders);
 
 
   return (
@@ -125,7 +127,7 @@ console.log(paginatedOrders);
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
-  {paginatedOrders.reverse().map((order) => (
+  {paginatedOrders.map((order) => (
     <tr key={order._id} className="hover:bg-gray-50">
       <td className="px-6 py-4 whitespace-nowrap text-blue-600 font-medium text-sm">
         {order._id.slice(-6).toUpperCase()}
@@ -140,16 +142,16 @@ console.log(paginatedOrders);
           <div>
             <div className="font-semibold mb-1 flex items-center">
               <img
-                src={order.data[0].restaurantId.image}
-                alt={order.data[0].restaurantId.name}
+                src={order.data[0].restaurantId?.image}
+                alt={order.data[0].restaurantId?.name}
                 className="w-6 h-6 object-cover rounded-full mr-2"
               />
-              {order.data[0].restaurantId.name}
+              {order.data[0].restaurantId?.name}
             </div>
             <ul className="list-disc pl-4 text-xs text-gray-700">
               {order.data.map((item, index) => (
                 <li key={index}>
-                  {item.name} (x{item.quantity})
+                  {item?.name} (x{item?.quantity})
                 </li>
               ))}
             </ul>

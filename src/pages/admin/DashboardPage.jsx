@@ -156,7 +156,7 @@ export default function RestaurantDashboard() {
       try {
         const response = await axiosInstance.get("/admin/getall", { withCredentials: true });
         const data = response.data;
-console.log(response);
+
 
 const totalPaid = data.payments
 .filter(payment => payment.paymentStatus === "paid")
@@ -166,13 +166,17 @@ console.log("Total Paid:", totalPaid);
         const totalOrders = data?.payments?.length || 0;
         const finalTotal = totalPaid || 0;
         const recentOrders = data?.payments?.slice(0, 6) || [];
+        const totalUsers=data.totalUser
+
+
 
        
 
         setDashboardData({
           totalOrders,
           finalTotal,
-          recentOrders
+          recentOrders,
+          totalUsers
         });
       } catch (error) {
         console.error("Error fetching dashboard data:", error);
@@ -184,12 +188,12 @@ console.log("Total Paid:", totalPaid);
 
   return (
     <div className=" bg-gray-100 min-h-screen lg:ml-64 p-6">
-      <h1 className="text-3xl font-semibold mb-6">Restaurant Dashboard</h1>
+      <h1 className="text-3xl font-semibold mb-6">Admin Dashboard</h1>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
         <DashboardCard title="Total Orders" value={dashboardData.totalOrders} icon="🛒" trend="up" percentage="8.5%" />
         <DashboardCard title="Final Total" value={`₹${dashboardData.finalTotal}`} icon="💰" trend="up" percentage="12%" />
-        <DashboardCard title="Active Users" value="5" icon="👥" trend="up" percentage="5%" />
+        <DashboardCard title="Active Users" value={dashboardData.totalUsers} icon="👥" trend="up" percentage="5%" />
       </div>
 
       {/* <div className="bg-white p-6 rounded-lg shadow">
