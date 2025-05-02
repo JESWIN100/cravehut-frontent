@@ -13,7 +13,7 @@ const navigate=useNavigate()
       try {
         const response = await axiosInstance.get(`food/restaurants/food/${name}`);
       
-  console.log(response);
+
   
         // Ensure restaurants is always an array
         setRestaurants(response.data.data );
@@ -55,7 +55,7 @@ navigate(`/resturant/${id}`)
             {dish.isAd && (
               <span className="text-xs text-gray-400 uppercase font-bold">Ad</span>
             )}
-            <h2 className="text-lg font-semibold mt-1">{dish.restaurantDetails.name}</h2>
+            <h2 className="text-lg font-semibold mt-1">{dish.restaurantDetails.name} ({dish.name})</h2>
             <div className="flex items-center text-sm text-gray-600 mt-1 space-x-2">
               <span className="text-green-600 font-semibold">★ {dish.ratings}</span>
               <span>•</span>

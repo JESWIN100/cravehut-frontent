@@ -21,6 +21,7 @@ import {
   import React, { useEffect, useState } from 'react';
   import { axiosInstance } from '../../config/axisoInstance';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
   
   export default function MyMenuPage() {
     const [profile, setProfile] = useState([]);
@@ -81,7 +82,20 @@ import { useNavigate } from 'react-router-dom';
     }, [dishes, searchQuery, categoryFilter]);
   
 
-
+    const handleDelete = async (id) => {
+      const confirm = window.confirm("Are you sure you want to delete this food item?");
+      if (!confirm) return;
+    
+      try {
+      const response=  await axiosInstance.delete(`/resturent/deletefood/${id}`);
+          toast.success(response.data.msg)
+        setDishes(prev => prev.filter(food => food._id !== id));
+        
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    
 
 
 

@@ -373,14 +373,14 @@ const CartPage = () => {
         </div>
       )}
       {isVerifyingPayment && (
-  <div className="fixed inset-0 bg-opacity-50 bg-black flex justify-center items-center z-50">
-   <img
-     src="https://assets-v2.lottiefiles.com/a/b8cd0fc4-1177-11ee-816f-8f04b81d486f/0vy75uYgnG.gif"
-     alt="Loading..."
-     style={{ width: "200px", height: "200px" }}
-   />
+  <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+    <div className="relative flex items-center justify-center">
+      <div className="w-16 h-16 border-4 border-t-transparent border-white rounded-full animate-spin"></div>
+   
+    </div>
   </div>
 )}
+
     </div>
   );
   

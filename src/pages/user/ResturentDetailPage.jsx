@@ -117,6 +117,8 @@ const handleAddToCart = async (foodItem) => {
     <div className="bg-white shadow-lg rounded-2xl p-5 min-w-[300px] md:min-w-[400px] lg:min-w-[800px] flex justify-between items-center">
       <div>
         <h2 className="text-xl font-bold">{resturant.name}</h2>
+        
+        
         <p className="text-gray-600">{resturant.address}</p>
         <p className="text-gray-500">{resturant.category}</p>
         <div className="flex items-center mt-2 text-yellow-500">
@@ -155,6 +157,7 @@ const handleAddToCart = async (foodItem) => {
   >
     <div className="flex-1">
       <h4 className="text-md font-bold">{food.name}</h4>
+      {food.category}
       <p className="text-gray-900 text-xl font-bold mt-1">₹{food.price}</p>
 
 

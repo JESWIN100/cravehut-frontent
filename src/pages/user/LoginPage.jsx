@@ -119,7 +119,7 @@ const navigate=useNavigate()
   onChange={setOtpInput}
   numInputs={4}
   separator={<span>-</span>}
-  renderInput={(props) => <input {...props} className="min-w-12 h-10 border text-center border-black mx-1 rounded" />}
+  renderInput={(props) => <input {...props} type="number" className="min-w-12 h-10 border text-center border-black mx-1 rounded" />}
 />
               </div>
  

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { axiosInstance } from '../../config/axisoInstance';
+import { toast } from 'sonner';
 
 export default function CategoriesPage() {
   const [categories, setCategories] = useState([]);
@@ -42,14 +43,18 @@ export default function CategoriesPage() {
           headers: { 'Content-Type': 'multipart/form-data' },
         });
         console.log(res);
-        
+        toast.success(res.data.msg);
       } else {
         // Create category
-        await axiosInstance.post('/admin/createCategory', formData, {
+      const response=  await axiosInstance.post('/admin/createCategory', formData, {
           withCredentials: true,
           headers: { 'Content-Type': 'multipart/form-data' },
         });
+        console.log(response);
+        
+        toast.success(response.data.message);
       }
+
       reset();
       setIsEditing(false);
       setEditCategoryId(null);
@@ -74,7 +79,9 @@ export default function CategoriesPage() {
   
     try {
       await axiosInstance.delete(`/admin/delete-Category/${id}`, { withCredentials: true });
+     toast.success("Category deleted successfully");
       fetchCategory();
+      
     } catch (err) {
       console.error('Delete Error:', err);
     }

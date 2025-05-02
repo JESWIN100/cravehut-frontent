@@ -13,6 +13,7 @@ import {
 import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { axiosInstance } from '../../config/axisoInstance';
+import { toast } from 'sonner';
 
 export default function AddDish() {
   const {
@@ -69,12 +70,15 @@ export default function AddDish() {
         withCredentials: true,
       });
 
-      alert('Dish added!');
+     console.log(res);
+     
+      toast.error(res.data.msg)
       setImagePreview(null);
       setImageFile(null);
     } catch (error) {
       console.error('Error adding dish:', error);
-      alert('Failed to add dish. Please try again.');
+      toast.error(error.response.data.msg[0] || error.response.data.error)
+      // alert('Failed to add dish. Please try again.');
     }
   };
 
@@ -87,6 +91,7 @@ export default function AddDish() {
         setCategories(categoryNames);
       } catch (error) {
         console.log(error);
+        
       }
     };
     fetchCategory();
