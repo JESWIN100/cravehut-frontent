@@ -109,7 +109,7 @@ export default function AdminHeader() {
                 label="Orders" 
                 isActive={location.pathname.includes('/admin/orders')}
               />
-              <NavItem 
+              {/* <NavItem 
                 to="/admin/reviews" 
                 icon={<Star size={20} />} 
                 label="Reviews" 
@@ -120,7 +120,7 @@ export default function AdminHeader() {
                 icon={<Settings size={20} />} 
                 label="Settings" 
                 isActive={location.pathname.includes('/admin/settings')}
-              />
+              /> */}
             </ul>
           </nav>
           
